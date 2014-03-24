@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="enable_early_miss_bus_prompt"
+        android:title="首末班车次提醒"
+        android:summary=""
+        android:summaryOn="@string/selected_bus_early_late_prompt"
+        android:summaryOff="@string/unselected_bus_early_late_prompt"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:key="startup_screen_select"
+        android:title="选择启动界面"
+        android:defaultValue="0"
+        android:entries="@array/start_screen_select_texts"
+        android:entryValues="@array/start_screen_select_values"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <ListPreference
+        android:key="fav_bus_select"
+        android:title="收藏的公交"
+        android:defaultValue="-1"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+</PreferenceScreen>

@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.yyscamper.mybus.BusInfoActivity" >
+
+    <item android:id="@+id/bus_stop_title"
+        android:title="@string/default_bus_stop_title"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:actionLayout="@layout/bus_start_end_stop"/>
+
+    <item android:id="@+id/action_next_bus"
+        android:title="@string/action_next_bus"
+        android:orderInCategory="101"
+        android:showAsAction="always" />
+
+    <item android:id="@+id/action_set_fav"
+        android:title="@string/action_set_fav"
+        android:orderInCategory="102"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
+</menu>
