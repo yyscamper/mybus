@@ -100,6 +100,12 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSectionsPagerAdapter.refreshNearestBus();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,6 +116,7 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
     }
 
     private void setBusStopTitle() {
+        /*
         if (mCurrBus != null) {
             TextView tv = (TextView)mMenuBusStopTitle.getActionView().findViewById(R.id.textViewValue);
             //tv.setText( "(" + mCurrBus.getStartStop() + "-" + mCurrBus.getEndStop() + ")");
@@ -119,11 +126,12 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
             else
                 tv.setText("(未知的起点站)");
         }
+        */
     }
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        mMenuBusStopTitle = menu.findItem(R.id.bus_stop_title);
-        setBusStopTitle();
+        //mMenuBusStopTitle = menu.findItem(R.id.bus_stop_title);
+        //setBusStopTitle();
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -225,6 +233,11 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
             mBusTimeFrag.onNotifyBusChanged(bus);
             mBusStopFrag.onNotifyBusChanged(bus);
         }
+
+        public void refreshNearestBus() {
+            if (mBusTimeFrag != null)
+                mBusTimeFrag.refreshNearestBusInfo();
+        }
     }
 
     /**
@@ -286,6 +299,8 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         private ListView mViewBusTimeList;
+        private TextView mViewStartStopName;
+        private TextView mViewEndStopName;
         private static Bus mCurBus;
         /**
          * Returns a new instance of this fragment for the given section
@@ -309,8 +324,26 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_bus_time_info, container, false);
             mViewBusTimeList = (ListView)rootView.findViewById(R.id.listViewAllBusTimes);
+            mViewStartStopName = (TextView)rootView.findViewById(R.id.textViewStartStop);
+            mViewEndStopName = (TextView)rootView.findViewById(R.id.textViewEndStop);
             refreshViewData();
             return rootView;
+        }
+
+        public int refreshNearestBusInfo() {
+            int ret = selectNextBusTime(mCurBus);
+            int sel = (ret < 0) ? 0 : ret;
+
+            ((MyStringListItemAdapter)mViewBusTimeList.getAdapter()).setSelectedItem(sel);
+
+            if (sel > 1) {
+                mViewBusTimeList.setSelection(sel - 2);
+            }
+            else {
+                mViewBusTimeList.setSelection(0);
+            }
+            mViewBusTimeList.smoothScrollToPosition(sel);
+            return ret;
         }
 
         private void refreshViewData() {
@@ -320,18 +353,21 @@ public class BusInfoActivity extends Activity implements ActionBar.TabListener {
             //        android.R.layout.simple_selectable_list_item, convertTimeArray(mCurBus.getAllBusTime()));
 
             mViewBusTimeList.setAdapter(adapter);
-
-            int ret = selectNextBusTime(mCurBus);
-            int sel = (ret < 0) ? 0 : ret;
-
-            adapter.setSelectedItem(sel);
-            if (sel > 1) {
-                mViewBusTimeList.setSelection(sel - 2);
+            if (mCurBus.getStartStop() != null) {
+                mViewStartStopName.setText(mCurBus.getStartStop());
             }
             else {
-                mViewBusTimeList.setSelection(0);
+                mViewStartStopName.setText("?未知起点站?");
             }
-            mViewBusTimeList.smoothScrollToPosition(sel);
+
+            if (mCurBus.getEndStop() != null) {
+                mViewEndStopName.setText(mCurBus.getEndStop());
+            }
+            else {
+                mViewEndStopName.setText("?未知终点站?");
+            }
+
+            int ret = refreshNearestBusInfo();
 
             SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(getActivity());
             boolean enablePrompt = setting.getBoolean(SettingsActivity.KEY_SELECT_BUS_EARLY_LATE_PROMPT, true);

@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Volume\prj\Project_Personal\android\MyBus" />
-            <option value="C:\Volume\prj\Project_Personal\android\MyBus\mybus" />
+            <option value="E:\Project\Android_Workspace\mybus" />
+            <option value="E:\Project\Android_Workspace\mybus\mybus" />
           </set>
         </option>
       </GradleProjectSettings>
